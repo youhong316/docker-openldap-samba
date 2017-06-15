@@ -1,5 +1,5 @@
 FROM dinkel/openldap:latest
-MAINTAINER michelkaeser
+MAINTAINER youhong316@gmail.com
 
 # install additional packages
 RUN apt-get update && \
@@ -12,11 +12,11 @@ RUN apt-get update && \
 RUN update-rc.d samba remove
 
 # integrate samba schema in slapd
-RUN gunzip /usr/share/doc/samba/examples/LDAP/samba.schema.gz \
+RUN gzip -d /usr/share/doc/samba/examples/LDAP/samba.schema.gz \
     && cp /usr/share/doc/samba/examples/LDAP/samba.schema /etc/ldap/schema/
-RUN gunzip /usr/share/doc/samba/examples/LDAP/samba.ldif.gz \
+RUN gzip -d /usr/share/doc/samba/examples/LDAP/samba.ldif.gz \
     && cp /usr/share/doc/samba/examples/LDAP/samba.ldif /etc/ldap/schema/
 RUN slapadd -n0 -F /etc/ldap/slapd.d -l "/etc/ldap/schema/samba.ldif"
 
 # fix ldif permissions
-RUN chown openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema/*
+RUN chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema
