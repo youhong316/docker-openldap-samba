@@ -12,10 +12,10 @@ RUN apt-get update && \
 RUN update-rc.d samba remove
 
 # integrate samba schema in slapd
-RUN gzip -d /usr/share/doc/samba/examples/LDAP/samba.schema.gz \
-    && cp /usr/share/doc/samba/examples/LDAP/samba.schema /etc/ldap/schema/
-RUN gzip -d /usr/share/doc/samba/examples/LDAP/samba.ldif.gz \
-    && cp /usr/share/doc/samba/examples/LDAP/samba.ldif /etc/ldap/schema/
+RUN test -d /etc/ldap.dist/schema || ( gunzip /usr/share/doc/samba/examples/LDAP/samba.schema.gz \
+    && cp /usr/share/doc/samba/examples/LDAP/samba.schema /etc/ldap/schema/ )
+RUN test -d /etc/ldap.dist/schema || ( gunzip /usr/share/doc/samba/examples/LDAP/samba.ldif.gz \
+    && cp /usr/share/doc/samba/examples/LDAP/samba.ldif /etc/ldap/schema/ )
 RUN slapadd -n0 -F /etc/ldap/slapd.d -l "/etc/ldap/schema/samba.ldif"
 
 # fix ldif permissions
