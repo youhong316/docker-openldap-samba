@@ -16,7 +16,5 @@ RUN test -d /etc/ldap.dist/schema || ( gunzip /usr/share/doc/samba/examples/LDAP
     && cp /usr/share/doc/samba/examples/LDAP/samba.schema /etc/ldap/schema/ )
 RUN test -d /etc/ldap.dist/schema || ( gunzip /usr/share/doc/samba/examples/LDAP/samba.ldif.gz \
     && cp /usr/share/doc/samba/examples/LDAP/samba.ldif /etc/ldap/schema/ )
-RUN slapadd -n0 -F /etc/ldap/slapd.d -l "/etc/ldap/schema/samba.ldif"
-
-# fix ldif permissions
-RUN chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema
+RUN echo "include         /etc/ldap/schema/samba.schema" >> /usr/share/slapd/slapd.conf \ 
+    && echo "include: file:///etc/ldap/schema/samba.ldif" >> /usr/share/slapd/slapd.init.ldif
